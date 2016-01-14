@@ -1,0 +1,353 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <title>Slyce Worktest</title>
+    <style>
+      body {
+        margin: 20px;
+      }
+
+      section {
+        margin-left: 50px;
+      }
+
+      .tasklist {
+        font-size: 12pt;
+      }
+
+      .tasklist li {
+        margin-bottom: 15px;
+      }
+
+      .tasklist code {
+        color: #048b02;
+        font-size: 12pt;
+        font-weight: bold;
+      }
+
+      .inline-block {
+        display: inline-block;
+      }
+
+      .status {
+        margin-left: 10px;
+        margin-right: 10px
+      }
+
+      .success {
+        color: #006400;
+      }
+
+      .error {
+        color: #FF0000;
+      }
+
+      .context {
+        margin-top: 10px;
+      }
+
+      pre {
+        margin-top: 5px;
+        margin-bottom: 10px;
+      }
+
+      .clear {
+        color: #000000;
+      }
+
+      .clear:hover, .clear:active, .clear:visited {
+        color: #000000;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="intro">
+      <h2>Slyce Worktest</h2>
+      <p>Your task is to design and implement data schemas and corresponding HTTP server endpoints for a professional athlete hosting a Question & Answer session with fans.</p>
+      <p>Using an HTTP server and data store of your choosing, please implement the REST-like endpoints listed below.</p>
+      <p>Each task details a minimum set of required data attributes, add more as you deem necessary.</p>
+      <p>The routes in the task list are only suggestions, modify them however you see fit.</p>
+      <p>Be prepared to discuss any benefits, limitations, and tradeoffs of your design after the exercise.</p>
+      <br/>
+      <p>This webpage is meant to help you test your implementation, feel free to make modifications in order to get it talking with your server.</p>
+      <p>By default, this webpage expects an HTTP server running on <strong>http://localhost:8080</strong> that accepts and returns all data in JSON format.</p>
+      <p>It also attempts to make requests to the example routes, so if you make changes to the routes, you will also need to change the JavaScript on the page code.</p>
+      <p>Feel free to ask us any questions you may have.</p>
+      <br/>
+      <p>When you are finished, please email your source code (including your version of this HTML file if you made any modifications) along with directions for launching the server and data store to <a href="mailto:dian@slyce.io">dian@slyce.io</a> or give us a link to your GitHub.</p>
+    </section>
+
+    <section class="tasks">
+      <h3>Tasks</h3>
+      <p>*Note: All data models are expected to have some sort of <strong>id</strong> field. All user models must have at least a <strong>name</strong> attribute.</p>
+      <ul class="tasklist">
+        <li>
+          <p>1. Create a QA session. QA sessions must have a <strong>host</strong> user, a <strong>start_time</strong>, and an <strong>end_time</strong>.</p>
+          <code>POST /qa</code>
+        </li>
+        <li>
+          <p>2. Retrieve a QA session.</p>
+          <code>GET /qa/:qa_id</code>
+        </li>
+        <li>
+          <p>3. Ask a question. Questions are within the context of a single QA session and must contain <strong>text</strong> and an <strong>asked_by</strong> user.</p>
+          <code>POST /question/:qa_id</code>
+        </li>
+        <li>
+          <p>4. Answer a question. Can assume one answer per question. An answer can allow for either <strong>text</strong> and/or <strong>image_url</strong> as a response. It must also have an <strong>answered_by</strong> user.</p>
+          <code>POST /answer/:question_id</code>
+        </li>
+        <li>
+          <p>5. Retrieve a list of questions for a given QA session. Allow for the option of filtering answered vs. non-answered questions.</p>
+          <p>Each question in the result list must contain all relevant expanded models. IE: the asked_by user, the answer (if there was one), and the answered_by user.</p>
+          <code>GET /qa/:qa_id/questions</code>
+        </li>
+      </ul>
+    </section>
+
+    <section class="testing">
+      <h3>Testing</h3>
+      <p>Form fields are sent to the server as JSON in POST requests. EX: the host_name and start_time fields are sent as {host_name: value, start_time: value}. ID fields may be sent as part of the URL depending on the endpoint. EX: qa_id = 1234 is included in the URL as /qa/1234</p>
+      <p>If you see 'Access control...' type errors in the browser developer console, read the comments in the JavaScript source code of this HTML page regarding 'CORS'.</p>
+      <form id="createQa">
+        <fieldset class="inline-block">
+          <legend>1. Create Q&A Session</legend>
+          <input name="host_name" type="text" placeholder="host_name" required>
+          <input name="start_time" placeholder="start_date" required>
+          <input name="end_time" placeholder="end_date" required>
+          <button id="create-qa" type="submit" class="btn btn-primary">POST</button>
+        </fieldset>
+        <div class="inline-block status hidden"></div>
+        <a title="Clear" class="clear hidden">X</a>
+        <div class="context hidden"></div>
+        <pre class="hidden"><code class="result"></code></pre>
+      </form>
+
+      <form id="getQa">
+        <fieldset class="inline-block">
+          <legend>2. Get Q&A Session</legend>
+          <input name="qa_id" placeholder="qa_id" required>
+          <button id="get-qa" type="submit" class="btn btn-primary">GET</button>
+        </fieldset>
+        <div class="inline-block status hidden"></div>
+        <a title="Clear" class="clear hidden">X</a>
+        <div class="context hidden"></div>
+        <pre class="hidden"><code class="result"></code></pre>
+      </form>
+
+      <form id="askQuestion">
+        <fieldset class="inline-block">
+          <legend>3. Ask a question</legend>
+          <input name="qa_id" placeholder="qa_id" required>
+          <input name="text" placeholder="text" required>
+          <input name="asked_by_name" placeholder="asked_by_name" required>
+          <button id="ask-question" type="submit" class="btn btn-primary">POST</button>
+        </fieldset>
+        <div class="inline-block status hidden"></div>
+        <a title="Clear" class="clear hidden">X</a>
+        <div class="context hidden"></div>
+        <pre class="hidden"><code class="result"></code></pre>
+      </form>
+
+      <form id="answerQuestion">
+        <fieldset class="inline-block">
+          <legend>4. Answer a question</legend>
+          <input name="question_id" placeholder="question_id" required>
+          <input name="text" placeholder="text">
+          <input name="image_url" placeholder="image_url">
+          <input name="answered_by" placeholder="answered_by_name" required>
+          <button id="answer-question" type="submit" class="btn btn-primary">POST</button>
+        </fieldset>
+        <div class="inline-block status hidden"></div>
+        <a title="Clear" class="clear hidden">X</a>
+        <div class="context hidden"></div>
+        <pre class="hidden"><code class="result"></code></pre>
+      </form>
+
+      <form id="getQuestions">
+        <fieldset class="inline-block">
+          <legend>5. Get Questions</legend>
+          <input name="qa_id" placeholder="qa_id" required>
+          <button id="get-questions" type="submit" class="btn btn-primary">GET</button>
+          <br>
+          <input name="non_answered" type="checkbox" id="cbox1" value="true"> Only Non-answered questions
+        </fieldset>
+        <div class="inline-block status hidden"></div>
+        <a title="Clear" class="clear hidden">X</a>
+        <div class="context hidden"></div>
+        <pre class="hidden"><code class="result"></code></pre>
+      </form>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script>
+      $(function() {
+        /**
+         * Cross-Origin Resource Sharing (CORS)
+         * If your browser is giving you errors like: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+         *
+         * You have a few options:
+         *
+         * 1. Disable CORS on your browser (easiest). For Chrome, start Chrome with the '--disable-web-security' argument.
+         *    http://stackoverflow.com/questions/3102819/disable-same-origin-policy-in-chrome
+         *
+         * 2. Host this HTML file from the same domain as your server.
+         *
+         * 3. Set up CORS for your server. This involves setting up special response headers and request handling.
+         *    This setup varies depending on your server.
+         */
+
+        // Constants
+        var SERVER_HOST = 'http://localhost',
+            SERVER_PORT = 8080;
+
+        /**
+         * AJAX request helper function. Serializes a $.serializeArray() object into a JSON object
+         * string to be sent to the server via $.ajax().
+         *
+         * @method req
+         * @param {String} url - the relative URL path to make the request to
+         * @param {String} method - the REST method to call (defaults to 'GET')
+         * @param {Array} params - result from $.serializeArray() on form input values. See https://api.jquery.com/serializeArray/
+         * @returns {Promise} - $.Promise() object with the result of $.ajax(). See http://api.jquery.com/jquery.ajax/
+         */
+        var req = function(url, method, params) {
+          var paramsObj,
+              i,
+              options;
+
+          if(params) {
+            // Serialize form input parameters into JSON to send to the server
+            paramsObj = {};
+            for(i = 0; i < params.length; i++) {
+              paramsObj[params[i].name] = params[i].value;
+            }
+          }
+
+          options = {
+            url: SERVER_HOST+':'+SERVER_PORT+url,
+            method: method || 'GET',
+            data: paramsObj ? JSON.stringify(paramsObj) : null,
+            dataType: 'JSON',
+            contentType: 'application/json',
+            context: {path: url, method: method, form: this},
+            crossDomain: true,
+            headers: {}
+          };
+          return $.ajax(options);
+        },
+        // Handles displaying UI elements for a successful response
+        handleSuccess = function(data, textStatus, xhr) {
+          var $this = $(this.form),
+              $status = $this.find('.status'),
+              $result = $this.find('.result'),
+              $clearBtn = $this.find('.clear'),
+              $context = $this.find('.context');
+
+          $status.removeClass('success error').addClass('success').text('Success ' + xhr.status).removeClass('hidden');
+          $clearBtn.removeClass('hidden');
+          $context.text(this.method+' '+SERVER_HOST+':'+SERVER_PORT+this.path).removeClass('hidden');
+          $result.text(JSON.stringify(data, null, 2));
+          $result.parent().removeClass('hidden');
+        },
+        // Handles displaying UI elements for an error response
+        handleError = function(err) {
+          var $this = $(this.form),
+              $status = $this.find('.status'),
+              $result = $this.find('.result'),
+              $clearBtn = $this.find('.clear'),
+              $context = $this.find('.context');
+
+          $context.text(this.method+' '+SERVER_HOST+':'+SERVER_PORT+this.path).removeClass('hidden');
+          if(err && !err.status) {
+            $status.removeClass('success error').addClass('error').text('Error ' + err.status+'. Cannot connect to server.').removeClass('hidden');
+          } else {
+            $status.removeClass('success error').addClass('error').text('Error ' + err.status).removeClass('hidden');
+            $clearBtn.removeClass('hidden');
+            $result.text(JSON.stringify(err.responseJSON, null, 2));
+            $result.parent().removeClass('hidden');
+          }
+        };
+
+        // Event Bindings
+        var $body = $('body');
+
+        // 1. Create QA
+        $body.on('submit', '#createQa', function(evt) {
+          evt.preventDefault();
+          var path = '/qa',
+              method = 'POST',
+              params = $(this).serializeArray();
+
+          req.call(this, path, method, params).done(handleSuccess).fail(handleError);
+        });
+
+        // 2. Get QA
+        $body.on('submit', '#getQa', function(evt) {
+          evt.preventDefault();
+          var qa_id = $(this).find('input[name="qa_id"]').val(),
+              path = '/qa/'+qa_id,
+              method = 'GET';
+
+          req.call(this, path, method).done(handleSuccess).fail(handleError);
+        });
+
+        // 3. Ask Question
+        $body.on('submit', '#askQuestion', function(evt) {
+          evt.preventDefault();
+          var qa_id = $(this).find('input[name="qa_id"]').val(),
+              path = '/question/'+qa_id,
+              method = 'POST',
+              params = $(this).serializeArray();
+
+          req.call(this, path, method, params).done(handleSuccess).fail(handleError);
+        });
+
+        // 4. Answer Question
+        $body.on('submit', '#answerQuestion', function(evt) {
+          evt.preventDefault();
+          var question_id = $(this).find('input[name="question_id"]').val(),
+              path = '/answer/'+question_id,
+              method = 'POST',
+              params = $(this).serializeArray();
+
+          req.call(this, path, method, params).done(handleSuccess).fail(handleError);
+        });
+
+        // 5. Get Questions
+        var state;
+        $('#getQuestions').find('input[name="non_answered"]').on('click', function () {
+          state = $(this).attr("checked") === "checked" ? false : true;
+           if(state){
+            $(this).attr("checked", "checked");
+          }else{
+              $(this).removeAttr("checked");
+          }
+          console.log(state);
+        });
+
+        $body.on('submit', '#getQuestions', function(evt) {
+          evt.preventDefault();
+          var qa_id = $(this).find('input[name="qa_id"]').val(),
+              non_answered = $(this).find('input[name="non_answered"]').val(),
+              path = '/qa/'+qa_id+'/questions/'+state,
+              method = 'GET';
+
+          req.call(this, path, method).done(handleSuccess).fail(handleError);
+        });
+
+        // Clear results
+        $body.on('click', '.clear', function(evt) {
+          evt.preventDefault();
+          var $form = $(this).addClass('hidden').closest('form');
+          $form.find('.context').addClass('hidden');
+          $form.find('pre').addClass('hidden');
+          $form.find('.status').addClass('hidden');
+        });
+      });
+    </script>
+  </body>
+</html>
