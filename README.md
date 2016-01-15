@@ -1,11 +1,18 @@
 #Slyce Test
 
 ## Requirements
+
 - Node 5.4.0
 - NPM 2.14.15
 - MySQL 5.7.10
 
-To install Mysql run ```brew install mysql```.
+Check if npm is installedwith: ```npm -v```
+
+Check if Node is installedwith: ```node -v```
+Install Node.js [HERE](https://nodejs.org/en/)
+
+Check if MySQL is installed with: ```which mysql```
+To install Mysql run ```brew install mysql```
 
 ## Installing Dependencies
 
@@ -13,9 +20,6 @@ From the command line run:
 ```npm install```
 
 ## Development
-
-Run local server with the following command: 
-```nodemon server/basic-server.js``` or ```npm start```
 
 To start the mysql server run the following in the command line:
 ```mysql.server start```
@@ -25,6 +29,9 @@ Load the schema into mysql by typing the following command:
 
 Log in to mysql as root user with the following command:
 ```mysql -u root```
+
+Run local server with the following command: 
+```nodemon server/basic-server.js``` or ```npm start```
 
 ### Basic MySQL command lines:
 
