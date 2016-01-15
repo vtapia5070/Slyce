@@ -1,0 +1,22 @@
+TODO:
+
+- update status code for errors in data query promises
+
+- write tests before further development
+
+- great Grunt/Gulp build tasks to automate database server
+
+- refactor code
+  - avoid code reuse in controllers
+  - modularize request-handler.js with a utils.js file for helper functions
+    - send response/ sendError
+    - CORS headers
+    - getData
+  - replace callback functions with promises
+  - use consistent promises from either Sequelize or Bluebird
+
+- resolve edge-cases for security:
+  - http request from unwated routes
+  - handle other database query errors
+  - Front-end forms:
+    - XSS attatcks 

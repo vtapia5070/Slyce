@@ -26,12 +26,7 @@ module.exports = {
     .then(function (answer) {
       cb(answer.dataValues);
     }).catch(function (err) {
-      cb("Error in questions.js", err);
-    }););
+      cb("There are no answers for this question_id: "+ id);
+    });
   }
 };
-
-// module.exports.getAnswers(1, function (data) {
-//   console.log("THIS IS THE RESULT", data);
-// });
-
