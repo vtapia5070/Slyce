@@ -33,6 +33,8 @@ Log in to mysql as root user with the following command:
 Run local server with the following command: 
 ```nodemon server/basic-server.js``` or ```npm start```
 
+Local Server is connected to: http://localhost:8080/
+
 ### Basic MySQL command lines:
 
 - To view current databases and/or make sure the schema was loaded, run:
