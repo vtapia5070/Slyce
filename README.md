@@ -14,6 +14,9 @@ From the command line run:
 
 ## Development
 
+Run local server with the following command: 
+```nodemon server/basic-server.js``` or ```npm start```
+
 To start the mysql server run the following in the command line:
 ```mysql.server start```
 
