@@ -318,6 +318,7 @@
         });
 
         // 5. Get Questions
+        // added checkbox at a flag for filtered questions option
         var state;
         $('#getQuestions').find('input[name="non_answered"]').on('click', function () {
           state = $(this).attr("checked") === "checked" ? false : true;
@@ -326,7 +327,6 @@
           }else{
               $(this).removeAttr("checked");
           }
-          console.log(state);
         });
 
         $body.on('submit', '#getQuestions', function(evt) {
