@@ -15,7 +15,8 @@ TODO:
   - replace callback functions with promises
   - use consistent promises from either Sequelize or Bluebird
 
-- resolve edge-cases for security:
+- resolve edge-cases and security:
+  - when there are no questions in db 
   - http request from unwated routes
   - handle other database query errors
   - Front-end forms:

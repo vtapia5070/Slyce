@@ -52,11 +52,14 @@ module.exports = {
           }
         })(i);
       }
-      cb(["no unanswered questions"]);
+      cb(["no answered questions"]);
     });
   },
   getAllQuestions: function (num, cb) {
     this.getAnsweredQuestions(num, function (list) {
+      if (list[0] === "no answered questions") {
+        list = [];
+      }
       Questions.findAll({where: {answered: "false"}})
       .then(function (questions) {
         var newList = questions.concat(list);
