@@ -25,7 +25,9 @@ module.exports = {
     Answers.findOne({where: {questionId: id}})
     .then(function (answer) {
       cb(answer.dataValues);
-    }).catch();
+    }).catch(function (err) {
+      cb("Error in questions.js", err);
+    }););
   }
 };
 

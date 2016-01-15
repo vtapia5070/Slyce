@@ -8,7 +8,7 @@ module.exports = {
     console.log("data in controller is", data);
     Sessions.create(data)
       .then(function (result){
-        /* sends back: 
+         /* sends back: 
           {
             "id": 2,
             "host_name": "victoria",
@@ -17,16 +17,19 @@ module.exports = {
           }
         */
         cb(result.dataValues);
-      }).catch();
+      }).catch(function (err) {
+        console.log("ERROR is:", err);
+      });
   },
   // retrieve a session by qa_id
   retrieveSession: function (num, cb) {
     // may have to update to retrieve questions and answers
     Sessions.find({where: {id: num}})
       .then(function (info) {
-        console.log("info in retrieve session promise", info.dataValues);
         cb(info.dataValues);
-      }).catch();
+      }).catch(function(err) {
+        cb("This qa_id is invalid, try another!");
+      });
   }
 };
 

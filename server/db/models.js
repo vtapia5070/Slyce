@@ -21,14 +21,13 @@ module.exports = {
     }
   },
   questions: {
-    get: function (filtered, num, cb) {
+    get: function (filtered, id, cb) {
       if (filtered) {
-        questions.getUnansweredQuestions(num, function (questionsList) {
+        questions.getUnansweredQuestions(id, function (questionsList) {
           cb(questionsList);
         });
       } else {
-        console.log("calling getAllQuestions");
-        questions.getAllQuestions(num, function (questionsList){
+        questions.getAllQuestions(id, function (questionsList){
           cb(questionsList);
         });
       }
@@ -40,8 +39,6 @@ module.exports = {
     }
   },
   answers: {
-    get: function (req, res) {
-    },
     post: function (questionId, data, cb) {
       answers.saveAnswer(questionId, data, function (answerInfo) {
         cb(answerInfo);

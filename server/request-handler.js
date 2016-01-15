@@ -18,36 +18,33 @@ var sendResponse = function (response, data, statusCode) {
   response.end(JSON.stringify(data));
 };
 
-var actions = {
-  "POST": function (request, callback) {
-    var body = "";
-    request.on("data", function (chunk) {
-      body += chunk;
-    });
-    request.on("end", function () {
-      callback(JSON.parse(body));
-    });
-  } 
+var getData = function (request, callback) {
+  var body = "";
+  request.on("data", function (chunk) {
+    body += chunk;
+  });
+  request.on("end", function () {
+    callback(JSON.parse(body));
+  });
 };
 
 var postRoutes = {
   '/qa' : function (request, response) {
-    actions[request.method](request, function (data) {
+    getData(request, function (data) {
       models.sessions.post(data, function (jsonObj) {
         sendResponse(response, jsonObj);
       });
     });
   },
   'question': function (request, response, qaId) {
-    actions[request.method](request, function (question) {
+    getData(request, function (question) {
       models.questions.post(qaId, question, function (jsonObj) {
         sendResponse(response, jsonObj);
       });
     });
   },
   'answer': function (request, response, questionId) {
-    actions[request.method](request, function (data) {
-      console.log("answer is", data);
+    getData(request, function (data) {
       models.answers.post(questionId, data, function (jsonObj) {
         sendResponse(response, jsonObj);
       });
@@ -58,12 +55,10 @@ var postRoutes = {
 getRoutes = {
   'sessions': function (qaId, response) {
     models.sessions.get(qaId, function (jsonObj) {
-      console.log("response sending back:", jsonObj);
       sendResponse(response, jsonObj);
     });
   },
   'questions': function (answeredQuestions, qaId, response) {
-    console.log("questions in getRoutes", answeredQuestions);
     models.questions.get(answeredQuestions, qaId, function (questions) {
       sendResponse(response, questions);
     });
@@ -99,9 +94,7 @@ module.exports = function (request, response) {
       } else {
         url[4] = true;
       }
-      console.log(url[4]);
       getRoutes.questions(url[4], JSON.parse(url[2]), response);
-      // console.log("type:", typeof JSON.parse(url[4]));
     } else {
       sendError(response);
     }
