@@ -52,6 +52,7 @@ module.exports = {
           }
         })(i);
       }
+      cb(["no unanswered questions"]);
     });
   },
   getAllQuestions: function (num, cb) {

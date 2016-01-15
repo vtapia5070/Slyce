@@ -89,7 +89,7 @@ module.exports = function (request, response) {
     if (url.length === 3) {
       getRoutes.sessions(JSON.parse(url[2]), response);
     } else if (url.length === 5 && url[3] === "questions") {
-      if (url[4] === "false") {
+      if (url[4] === "false" || url[4] === "undefined") {
         url[4] = false;
       } else {
         url[4] = true;
