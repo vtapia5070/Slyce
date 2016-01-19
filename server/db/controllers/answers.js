@@ -7,8 +7,6 @@ module.exports = {
   // method to retrieve question by id and add answer ID
   saveAnswer: function (questionId, data, cb) {
     // update answered to true
-    console.log("answered question data!", data);
-    // data.answered_by_name
     Questions.update({ answered: "true"}, {where: {id: questionId}})
     .then(function (question) {
     }).catch();

@@ -1,5 +1,8 @@
 TODO:
 
+- IMPORTANT:
+  - getAnsweredQuestions inconsistent: need to figure out how to run async calls in parallel.
+
 - update status code for errors in data query promises
 
 - write tests before further development

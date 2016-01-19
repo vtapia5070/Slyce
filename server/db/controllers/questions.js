@@ -38,12 +38,14 @@ module.exports = {
       var counter = 0;
       for (var i = 0; i <= data.length; i++) {
         (function (i) {
+          console.log("i:", i, filteredList);
           if (data[i] && data[i].answered === "true") {
             Answers.getAnswers(data[i].id, function (answer) {
               data[i].answer = answer;
               filteredList.push(data[i]);
               counter++;
               if (counter === data.length) {
+                console.log("filteredList", filteredList);
                 cb(filteredList);
               }
             });
