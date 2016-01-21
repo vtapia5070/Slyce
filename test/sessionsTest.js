@@ -25,8 +25,6 @@ describe("Persistent Node qa Server", function(done) {
       if (err) throw err;
       done();
     });
-
-    
   });
 
   afterEach(function() {
@@ -39,7 +37,7 @@ describe("Persistent Node qa Server", function(done) {
   * POST /qa
   */
   it("Should insert posted qa sessions to the DB", function(done) {
-    // Post the user to the qa server.
+    // Post the session info to the qa server.
     request({ method: "POST",
               uri: "http://localhost:8080/qa",
               json: { 
@@ -49,8 +47,7 @@ describe("Persistent Node qa Server", function(done) {
                     }
     }, function (error, response, body) {
       if (error) console.error('upload failed:', error);
-      console.log('Upload successful!  Server responded with:', body);
-      console.log("after request");
+      // console.log('Upload successful!  Server responded with:', body);
       // Now if we look in the database, we should find the
       // posted qa sesison there.
 
@@ -81,7 +78,6 @@ describe("Persistent Node qa Server", function(done) {
   */
   it("Should retrieve qa session from the DB", function(done) {
     var sessionId;
-    console.log("retrieving qa session");
     // var queryString = "SELECT * FROM sessions WHERE id = " + sessionId + ";";
     request({ method: "POST",
               uri: "http://localhost:8080/qa",
@@ -92,14 +88,14 @@ describe("Persistent Node qa Server", function(done) {
                     }
     }, function (error, response, body) {
       if (error) console.error('upload failed:', error);
-      console.log('Upload successful!  Server responded with:', body);
+      // console.log('Upload successful!  Server responded with:', body);
       sessionId = body.id;
 
       request({ method: "GET",
                 uri: "http://localhost:8080/qa/" + sessionId
       },  function(error, response, body) {
         if (error) console.error('upload failed:', error);
-        console.log('Upload successful!  Server responded with:', body);
+        // console.log('Upload successful!  Server responded with:', body);
 
         var sessionsLog = JSON.parse(body);
 
